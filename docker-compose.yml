@@ -17,7 +17,7 @@ services:
     networks:
       - app-network
 
-    platform: linux/amd64 # use this if you are using ARM architecture
+    # platform: linux/amd64 # use this if you are using ARM architecture
 
   # Express Backend
   backend:
@@ -42,7 +42,7 @@ services:
       timeout: 5s
       retries: 5
 
-    platform: linux/amd64 # use this if you are using ARM architecture
+    # platform: linux/amd64 # use this if you are using ARM architecture
   
 
   # MongoDB Database

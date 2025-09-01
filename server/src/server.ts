@@ -19,30 +19,15 @@ app.use(cors({
     credentials: true,
 }));
 
-// Session Conf
-// Make sure SessionData and SessionInteraction matches the on @/types/session
-
-export interface SessionInteraction {
-    type: 'pause' | 'resume' | 'popup_shown' | 'popup_yes' | 'popup_no' | 'defect_update';
-    timestamp: number;
-    metadata?: Record<string, any>;
-}
-// Augment the Express session type to include custom properties
-declare module 'express-session' {
-    interface SessionData {
-        loginId: string;
-        buildNumber: number;
-        numberOfParts: number;
-        timePerPart: number;
-        startTime: number;
-        totalPausedTime: number;
-        defects: number;
-        totalParts: number;
-        interactions: SessionInteraction[];
-        submittedBy: 'manual' | 'auto' | null;
-        totalActiveTime: number; 
-        totalInactiveTime: number;
-        countdownSeconds: number;
+// Connect to MongoDB
+async function connectToMongo() {
+    try {
+        const client = new MongoClient(mongoUri);
+        await client.connect();
+        db = client.db();
+        console.log('Connected to MongoDB successfully');
+    } catch (error) {
+        console.error('Failed to connect to MongoDB:', error);
     }
 }
 
@@ -59,18 +44,8 @@ app.get('/api/hello', (req, res) => {
     res.send(`${req.sessionID} - Hello World!`);
 });
 
-
-// Connect to MongoDB
-async function connectToMongo() {
-    try {
-        const client = new MongoClient(mongoUri);
-        await client.connect();
-        db = client.db();
-        console.log('Connected to MongoDB successfully');
-    } catch (error) {
-        console.error('Failed to connect to MongoDB:', error);
-    }
-}
+// HealthCheck
+app.get('/healthcheck', (req, res) => res.status(200).send('OK'));
 
 // Start server
 app.listen(port, async () => {
