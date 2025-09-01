@@ -1,0 +1,46 @@
+import React from 'react';
+import {
+  Input,
+  Button,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from '@chakra-ui/react';
+import { toaster } from "@/components/ui/toaster"
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from '@hookform/resolvers/zod';
+
+const schema = z.object({
+  name: z.string().min(1, { message: 'Required' }),
+  build_n: z.number().min(4), // build number
+});
+
+export const SearchForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  return (
+    <form onSubmit={handleSubmit((d) => console.log(d))}>      <FormControl isInvalid={errors.name}>
+      <FormLabel htmlFor='name'>First name</FormLabel>
+      <Input
+        id='name'
+        placeholder='name'
+        {...register('name')} />
+      <FormErrorMessage>
+        {errors.name?.message && <p>{errors.name?.message}</p>}
+      </FormErrorMessage>
+      <Input type='number' {...register('build_n', { valueAsNumber: true })} />
+      <FormErrorMessage>
+        {errors.name?.message && <p>{errors.name?.message}</p>}
+      </FormErrorMessage>
+    </FormControl>
+      <Button loading>Search</Button>
+    </form>
+  )
+}
