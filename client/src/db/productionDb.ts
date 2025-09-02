@@ -11,13 +11,13 @@ export const productionDatabase: ProductionData[] = [
     loginId: "John Doe",
     buildNumber: 1,
     numberOfParts: 1,
-    timePerPart: 1,
+    timePerPart: .1,
   },
   {
     loginId: "Jane Smith",
     buildNumber: 20250129001,
     numberOfParts: 150,
-    timePerPart: 12,
+    timePerPart: 3,
   },
   {
     loginId: "Peter Jones",

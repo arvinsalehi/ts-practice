@@ -5,6 +5,7 @@
 case "$1" in
     ("start")
         echo "Starting TrackSys services..."
+        docker-compose build
         docker-compose up -d --wait
         echo "Services started! Access:"
         echo "  Frontend: http://localhost:5173/"
@@ -25,7 +26,8 @@ case "$1" in
         ;;
     ("build")
         echo "Building TrackSys services..."
-        docker-compose up --build -d
+        docker-compose build 
+        docker-compose up -d
         ;;
     ("logs")
         echo "Showing logs..."
@@ -33,7 +35,7 @@ case "$1" in
         ;;
     ("clean")
         echo "Cleaning up Docker resources..."
-        docker-compose down -v
+        docker-compose down -v --remove-orphans
         docker system prune -f
         ;;
     ("status")

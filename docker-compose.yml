@@ -7,17 +7,14 @@ services:
       context: client
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "3000:80"  # ✅ Frontend accessible at localhost:3000
     environment:
       - NODE_ENV=production
       - REACT_APP_API_URL=http://localhost:3001/api
     depends_on:
-      - mongodb
-      # - backend
+      - backend  # ✅ Should depend on backend, not just mongodb
     networks:
       - app-network
-
-    # platform: linux/amd64 # use this if you are using ARM architecture
 
   # Express Backend
   backend:
@@ -25,11 +22,11 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "3001:3000"
+      - "3001:3001"  # ✅ Backend accessible at localhost:3001
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/tracksys
+      - PORT=3001  # ✅ Changed to match the exposed port
+      - MONGODB_URI=${MONGO_URI}
       - SESSION_SECRET=${SESSION_SECRET}
       - CORS_ORIGIN=http://localhost:3000
     depends_on:
@@ -37,13 +34,10 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "http://localhost:3001/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-    # platform: linux/amd64 # use this if you are using ARM architecture
-  
 
   # MongoDB Database
   mongodb:
@@ -81,4 +75,4 @@ volumes:
 
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge

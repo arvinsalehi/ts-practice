@@ -25,7 +25,7 @@ import { FaPlay } from 'react-icons/fa6';
 import { msToMinutes } from '@/utils';
 import { useSharedCountdown } from '@/context/CountdownContext';
 import { useToastHook } from '@/hooks/useToast';
-import { setSessionInteraction } from '@/services/session';
+import { setSessionInteraction, submitSessionData } from '@/services/session';
 import type { SessionInteraction } from '@/types/session';
 
 interface CountdownPopupProps {
@@ -85,15 +85,14 @@ export const CountdownPopup: React.FC<CountdownPopupProps> = ({
     }
 
     const onNo = () => {
-        closeToast()
         localStorage.clear();
-        // window.location.href = '/';
         scheduleNextToast(onYes, onNo, 10 * 60 * 1000);
     }
 
     const onYes = () => {
-        closeToast()
         scheduleNextToast(onYes, onNo, 10 * 60 * 1000);
+        submitSessionData()
+
     }
 
     onCompleteCallback.current = () => showToast(onYes, onNo)

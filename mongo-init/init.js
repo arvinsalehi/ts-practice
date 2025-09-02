@@ -4,9 +4,6 @@ db = db.getSiblingDB('tracksys');
 // Create collections
 db.createCollection('sessions');
 
-// Create indexes for better performance
-db.sessions.createIndex({ "loginId": 1 });
-db.sessions.createIndex({ "startTime": 1 });
 
 // Insert sample data if needed
 db.production_data.insertOne({

@@ -25,7 +25,7 @@ This project includes Docker configuration for easy development and deployment.
 
 4. **Access the application**
    - Frontend: http://localhost:3000
-   <!-- - Backend API: http://localhost:3001 -->
+   - Backend API: http://localhost:3001
    - MongoDB: localhost:27017
    - MongoDB Express (Admin): http://localhost:8081
 

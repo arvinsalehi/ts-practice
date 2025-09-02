@@ -16,7 +16,6 @@ COPY . .
 # Build the app
 RUN npm run build
 
-
 # Production stage with nginx
 FROM nginx:alpine
 

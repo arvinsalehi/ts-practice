@@ -27,18 +27,19 @@ export const useToastHook = () => {
             setpopupTimestamp(prev => prev ? [...prev, Date.now()] : [Date.now()]);
             // toast.close(TOAST_ID);
             scheduleNextToast(onYes, onNo, 10 * 60 * 1000); // Schedule next toast
-
             // Log interaction
             const interaction: SessionInteraction = {
                 type: 'popup_yes',
                 timestamp: Date.now(),
             }
             setSessionInteraction(interaction);
+            onYes();
         };
 
         const handleNoAction = () => {
             setIsToastActive(false);
             setpopupTimestamp(prev => prev ? [...prev, Date.now()] : [Date.now()]);
+            
             // toast.close(TOAST_ID);
             window.location.href = '/';
             scheduleNextToast(onYes, onNo, 10 * 60 * 10); // Schedule next toast
@@ -48,6 +49,8 @@ export const useToastHook = () => {
                 type: 'popup_no',
                 timestamp: Date.now(),
             }
+
+            onNo();
             setSessionInteraction(interaction);
 
         };
@@ -73,12 +76,6 @@ export const useToastHook = () => {
             timestamp: Date.now(),
         }
         setSessionInteraction(interaction);
-    };
-
-    const submitSessionData = async () => {
-        // Submit current session data to backend
-        console.log("Submitting session data to backend...");
-        // Add your API call here
     };
 
     const handleAutoSubmit = () => {

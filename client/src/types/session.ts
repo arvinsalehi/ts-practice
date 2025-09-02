@@ -8,7 +8,7 @@ export interface SessionData {
   defects: number;
   totalParts: number;
   interactions: SessionInteraction[];
-  submittedBy: 'manual' | 'auto' | null;
+  submittedBy: 'manual' | 'auto' | 'unkown';
   totalActiveTime: number; // milliseconds of active work time
   totalInactiveTime: number; // milliseconds of inactive time
 }
