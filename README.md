@@ -12,7 +12,8 @@ This repository contains a React frontend, an Express backend, and MongoDB (with
 
 1. Clone the repo and navigate into it
    ```bash
-   cd tracksys
+   git clone https://github.com/arvinsalehi/ts-practice.git
+   cd ts-practice
    ```
 
 2. Ensure required environment variables are available to Docker Compose (export them in your shell or provide a `.env` in the project root):
