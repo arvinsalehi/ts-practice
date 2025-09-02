@@ -8,7 +8,7 @@ case "$1" in
         docker-compose build
         docker-compose up -d --wait
         echo "Services started! Access:"
-        echo "  Frontend: http://localhost:5173/"
+        echo "  Frontend: http://localhost:3000/"
         echo "  Backend:  http://localhost:3001"
         echo "  MongoDB:  localhost:27017"
         echo "  Mongo Express: http://localhost:8081"
