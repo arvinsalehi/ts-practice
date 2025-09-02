@@ -1,69 +1,139 @@
-# React + TypeScript + Vite
+# TrackSys
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains a React frontend, an Express backend, and MongoDB (with mongo-express) for development and deployment.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Docker
+- Docker Compose
+- Node.js LTS (for local development)
 
-## Expanding the ESLint configuration
+## Quick Start (Docker)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone the repo and navigate into it
+   ```bash
+   cd tracksys
+   ```
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. Ensure required environment variables are available to Docker Compose (export them in your shell or provide a `.env` in the project root):
+   ```bash
+   # MongoDB
+   export MONGO_ROOT_USERNAME=admin
+   export MONGO_ROOT_PASSWORD=password123
+   export MONGO_DATABASE=tracksys
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+   # App
+   export SESSION_SECRET=changeme
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. Build and start the stack
+   ```bash
+   docker compose up -d --build
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+4. Access the services
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:3001
+   - Mongo Express: http://localhost:8081
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Services
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Frontend (React)
+- Port: 3000 (served by containerized Nginx build)
+- Path: `client/`
+- Dockerfile: `client/Dockerfile`
+
+### Backend (Express)
+- Port: 3001
+- Path: `server/`
+- Dockerfile: `server/Dockerfile`
+
+### MongoDB
+- Version: 7.0
+- Database: `tracksys`
+- Credentials: provided via env vars
+
+### Mongo Express
+- Port: 8081
+- Web-based MongoDB admin
+
+## Useful Docker Commands
+
+- Start services in foreground
+  ```bash
+  docker compose up
+  ```
+
+- Start services in background
+  ```bash
+  docker compose up -d
+  ```
+
+- Stop and remove services
+  ```bash
+  docker compose down
+  ```
+
+- View logs
+  ```bash
+  docker compose logs -f
+  ```
+
+- Clean rebuild
+  ```bash
+  docker compose down -v
+  docker system prune -f
+  docker compose up --build
+  ```
+
+## Development (Run components individually)
+
+You can develop each component locally. The common pattern is to `cd` into the folder and start it.
+
+- Start only MongoDB (via Docker)
+  ```bash
+  cd tracksys
+  docker compose up -d mongodb
+  ```
+
+- Start the backend locally
+  ```bash
+  cd server
+  npm install
+  # Set env for local dev (example)
+  export PORT=3001
+  export CORS_ORIGIN=http://localhost:5173
+  export MONGODB_URI=mongodb://admin:password123@localhost:27017/tracksys?authSource=admin
+  export SESSION_SECRET=changeme
+  npm run dev
+  # API: http://localhost:3001
+  ```
+
+- Start the frontend locally (Vite dev server)
+  ```bash
+  cd client
+  npm install
+  npm run dev
+  # App: http://localhost:5173
+  ```
+
+Notes:
+- If you prefer, you can run backend and frontend in Docker while developing. For example:
+  ```bash
+  # From project root
+  docker compose up backend
+  docker compose up frontend
+  ```
+- If ports conflict, adjust the host ports in `docker-compose.yml` accordingly.
+
+## Troubleshooting
+
+- Port conflicts: modify host port mappings in `docker-compose.yml`.
+- Permission issues:
+  ```bash
+  sudo chown -R $USER:$USER .
+  ```
+- Mongo shell (inside container):
+  ```bash
+  docker compose exec mongodb mongosh -u "$MONGO_ROOT_USERNAME" -p "$MONGO_ROOT_PASSWORD"
+  ```
