@@ -1,0 +1,20 @@
+# Backend Dockerfile for Express server
+FROM node:20-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3001
+
+# Start the server
+CMD ["npm", "run", "dev"] 
